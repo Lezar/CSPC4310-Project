@@ -60,6 +60,44 @@ class TestGraph(unittest.TestCase):
                     dist_uv = metric_graph_4.graph[u][v]
                     dist_vw = metric_graph_4.graph[v][w]
                     dist_wu = metric_graph_4.graph[w][u]
+                    self.assertTrue(dist_uv <= dist_vw + dist_wu)
+                    self.assertTrue(dist_vw <= dist_wu + dist_uv)
+                    self.assertTrue(dist_wu <= dist_uv + dist_vw)
+
+    def test_graph_is_symmetric(self):
+        """Test if graphs constructed are symmetric"""
+        graph_10 = graph.Graph(11)
+        
+        #Test symmetry
+        for u in range(len(graph_10.graph)):
+            for v in range(len(graph_10.graph)):
+                self.assertEqual(graph_10.graph[u][v], graph_10.graph[v][u])
+
+    def test_graph_generate_1_point(self):
+        """Test if Graph can generate 1 points"""
+        graph_1 = graph.Graph(1)
+        graph_1.generate_points(1)
+        self.assertEqual(len(graph_1.points), 1)
+
+    def test_graph_generate_11_points(self):
+        """Test if Graph can generate 11 points"""
+        graph_11 = graph.Graph(11)
+        graph_11.generate_points(11)
+        self.assertEqual(len(graph_11.points), 11)
+
+    def test_graph_points_are_not_all_same(self):
+        """Test that points generated are not all the same (or else problem is trivial)"""
+        graph_20 = graph.Graph(20)
+        graph_20.generate_points(20)
+
+        same = True        
+
+        for u in range(len(graph_20.points)):
+            for v in range(u, len(graph_20.points)):
+                if graph_20.points[u] != graph_20.points[v]:
+                    same = False
+
+        self.assertFalse(same)
 
 if __name__ == '__main__':
     unittest.main()
