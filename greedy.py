@@ -3,6 +3,18 @@ import heapq
 import random
 
 class GreedySolution():
+    """Generate complete metric graph as a 2D list (matrix) to be used for k-centre
+
+    Constructor Arguments:
+    graph: graph is the input graph, either a Graph instance or a 2D array,
+           it must be complete and satisfy triangular inequality
+
+    Attributes:
+    graph (list): A complete metric graph represented as a 2D list
+                  Each entry (i,j) in the array represents the distance between vertices indexed i and j
+    solution_set (list): A list of the vertex indices of the current solution
+    dist_to_soln (list): A list of the distances from each vertex to the solution_set
+    """
 
     def __init__(self, graph):
 
@@ -14,10 +26,7 @@ class GreedySolution():
 
         self.graph = graph
         self.solution_set = []
-        self.vertices = [[] for x in range(len(graph))]
-        for list in self.vertices:
-            heapq.heapify(list)
-        
+        self.dist_to_soln = []
 
     def add_vertex(self, vertex):
         """Add a vertex to the solution set
@@ -27,22 +36,24 @@ class GreedySolution():
         """
         self.solution_set.append(vertex)
         
-        for v in range(len(self.vertices)):
-            dist_v_vertex = self.graph[v][vertex]
-            heapq.heappush(self.vertices[v], dist_v_vertex)
+        # Calculate distance as the minimum
+        if len(self.solution_set) == 1:
+            # If it is the first vertex, just add the row list
+            self.dist_to_soln = self.graph[vertex]
+        else:
+            # Otherwise set the distance to the minimum
+            for i in range(len(self.dist_to_soln)):
+                self.dist_to_soln[i] = min(self.dist_to_soln[i], self.graph[vertex][i])
 
     def find_farthest_vertex(self):
         """Return the index of the farthest vertex from solution_set"""
-        # Create a list of tuples (w,v) where w is the distances of vertex v from solution set
-        distances = [(-self.vertices[v][0], v) for v in range(len(self.vertices))]
-        heapq.heapify(distances)
-        return distances[0][1]
+        return self.dist_to_soln.index(max(self.dist_to_soln))
 
     def cost(self):
         """Return the total cost of the current solution"""
         total_cost = 0
-        for v in self.vertices:
-            total_cost += v[0]
+        for v in self.dist_to_soln:
+            total_cost += v
         return total_cost
 
 def run_greedy(graph, k = 1, start_vertex = None):

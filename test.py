@@ -193,8 +193,8 @@ class TestGreedy(unittest.TestCase):
         self.solution.add_vertex(7)
         self.solution.add_vertex(8)
         self.solution.add_vertex(9)
-        self.assertTrue(self.solution.vertices[5][0], 14)
-        self.assertTrue(self.solution.vertices[3][0], 25)
+        self.assertTrue(self.solution.dist_to_soln[5], 14)
+        self.assertTrue(self.solution.dist_to_soln[3], 25)
 
     def test_find_farthest_vertex(self):
         """Tests if greedy can find the farthest vertex to add to its solution"""
@@ -212,20 +212,33 @@ class TestGreedy(unittest.TestCase):
         self.solution.add_vertex(3)
         self.solution.add_vertex(6)
         self.solution.add_vertex(7)
-
         self.assertEquals(self.solution.cost(), 277)
 
     def test_find_greedy_solution_set_k4(self):
         """Find the greedy solution set for graph10 when k = 4 given starting vertex 1"""
-
         solution_set, cost = greedy.run_greedy(self.graph10, k = 4, start_vertex = 1)
-        print "SOL: %s, COST: %s" % (solution_set, cost)
         self.assertTrue(1 in solution_set)
         self.assertTrue(5 in solution_set)
         self.assertTrue(3 in solution_set)
         self.assertTrue(6 in solution_set)
-        
         self.assertEquals(cost, 104)
+
+    def test_find_greedy_solution_set_k3(self):
+        """Find the greedy solution set for K_9 when k = 3 given starting vertex 7"""
+        graph9 = [[0,651,168,449,540,199,209,310,247],
+                [651,0,581,542,322,629,493,387,424],
+                [168,581,0,539,559,60,275,332,266],
+                [449,542,539,0,238,597,264,247,290],
+                [540,322,559,238,0,619,331,233,300],
+                [199,629,60,597,619,0,333,392,326],
+                [209,493,275,264,331,333,0,111,72],
+                [310,387,332,247,233,392,111,0,67],
+                [247,424,266,290,300,326,72,67,0]]
+        solution_set, cost = greedy.run_greedy(graph9, k = 3, start_vertex = 7)
+        self.assertTrue(7 in solution_set)
+        self.assertTrue(1 in solution_set)
+        self.assertTrue(5 in solution_set) 
+        self.assertEquals(cost, 917)
 
 if __name__ == '__main__':
     unittest.main()

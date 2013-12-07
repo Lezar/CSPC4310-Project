@@ -128,7 +128,7 @@ class Graph():
 if __name__ == '__main__':
     size = raw_input('Size of graph (positive integer):')
     filename = raw_input('Filename to save to:')
-    filename = filename + '.csv'
+    filename = './data/' + filename + '.csv'
 
     graph = Graph(int(size))
     graph.write_to_csv(filename)
