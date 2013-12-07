@@ -86,4 +86,22 @@ def run_greedy(graph, k = 1, start_vertex = None):
         next_vertex = solution.find_farthest_vertex()
 
     return solution.solution_set, solution.cost()
+
+if __name__ == '__main__':
+    filename = raw_input('Filename to open: ')
+    filename = './data/' + filename + '.csv'
+
+    graph = graph.Graph()
+    graph.read_from_csv(filename)
+
+    while(True):
+        k = int(raw_input('Please input k: '))
+        if k < len(graph.graph):
+            break
+        print "Graph is size %s. Please adjust your k value." % (len(graph.graph),)
+    
+    solution_set, cost = run_greedy(graph,k)
+
+    print "THE SOLUTION SET IS %s" % (solution_set,)
+    print "THE COST IS %s" % (cost,)
         
