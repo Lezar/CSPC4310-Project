@@ -118,7 +118,6 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(len(metric_graph_30.graph), 30)
         
         # Test triangle inequality
-        print metric_graph_30. points
         for u in range(len(metric_graph_30.graph)):
             for v in range(u, len(metric_graph_30.graph)):
                 for w in range(v, len(metric_graph_30.graph)):
@@ -154,7 +153,79 @@ class TestGraph(unittest.TestCase):
         for u in range(len(graph_10.graph)):
             for v in range(u, len(graph_10.graph)):
                 self.assertEqual(loaded_graph_10.graph[u][v], graph_10.graph[u][v])
-                self.assertEqual(loaded_graph_10.graph[v][u], graph_10.graph[v][u])                        
+                self.assertEqual(loaded_graph_10.graph[v][u], graph_10.graph[v][u])
+
+class TestGreedy(unittest.TestCase):
+    """Tests the greedy k-centre"""
+
+    def setUp(self):
+        self.graph10 = graph.Graph(10)
+        self.graph10.graph =[[0,22,40,48,7,85,59,51,75,31],
+                            [22,0,18,62,24,64,50,41,53,48],
+                            [40,18,0,73,41,46,44,35,35,62],
+                            [48,62,73,0,41,103,56,55,100,17],
+                            [7,24,41,41,0,83,53,46,75,25],
+                            [85,64,46,103,83,0,50,48,14,98],
+                            [59,50,44,56,53,50,0,9,51,56],
+                            [51,41,35,55,46,48,9,0,47,52],
+                            [75,53,35,100,75,14,51,47,0,92],
+                            [31,48,62,17,25,98,56,52,92,0]]
+
+        self.solution = greedy.GreedySolution(self.graph10)
+
+    def test_solution_adds_vertex(self):
+        """Tests if the GreedySolution can add a vertex to its solution set"""  
+
+        # Add index 1 and test size and in solution
+        self.solution.add_vertex(1)
+        self.assertTrue(1 in self.solution.solution_set)
+        self.assertEqual(len(self.solution.solution_set), 1)
+
+        # Add index 5 and test size and in solution
+        self.solution.add_vertex(5)
+        self.assertTrue(1 in self.solution.solution_set)
+        self.assertTrue(5 in self.solution.solution_set)
+        self.assertEqual(len(self.solution.solution_set), 2)
+
+    def test_distance_from_vertex_to_solution(self):
+        """Tests if the distance from a vertex to solution set is properly calculated"""
+        self.solution.add_vertex(6)
+        self.solution.add_vertex(7)
+        self.solution.add_vertex(8)
+        self.solution.add_vertex(9)
+        self.assertTrue(self.solution.vertices[5][0], 14)
+        self.assertTrue(self.solution.vertices[3][0], 25)
+
+    def test_find_farthest_vertex(self):
+        """Tests if greedy can find the farthest vertex to add to its solution"""
+        # Test first by adding 3
+        self.solution.add_vertex(3)
+        next_vertex = self.solution.find_farthest_vertex()
+        self.assertEquals(next_vertex, 5)
+        
+        # Test by adding 5
+        self.solution.add_vertex(5)
+        next_vertex = self.solution.find_farthest_vertex()
+        self.assertEquals(next_vertex, 1)
+
+    def test_determine_cost_of_solution_set(self):
+        self.solution.add_vertex(3)
+        self.solution.add_vertex(6)
+        self.solution.add_vertex(7)
+
+        self.assertEquals(self.solution.cost(), 277)
+
+    def test_find_greedy_solution_set_k4(self):
+        """Find the greedy solution set for graph10 when k = 4 given starting vertex 1"""
+
+        solution_set, cost = greedy.run_greedy(self.graph10, k = 4, start_vertex = 1)
+        print "SOL: %s, COST: %s" % (solution_set, cost)
+        self.assertTrue(1 in solution_set)
+        self.assertTrue(5 in solution_set)
+        self.assertTrue(3 in solution_set)
+        self.assertTrue(6 in solution_set)
+        
+        self.assertEquals(cost, 104)
 
 if __name__ == '__main__':
     unittest.main()

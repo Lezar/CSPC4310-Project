@@ -17,7 +17,8 @@ class Graph():
     graph (list): A complete metric graph represented as a 2D list
                   Each entry (i,j) in the array represents the distance between vertices indexed i and j
                   We will ensure the graph is metric by finding distances of points on a plane
-    
+    points (list): A list of points on an xy plane, where each element in the list is
+                   a tuple (x,y) where x and y are the x and y coordinates on the plane
     """
 
     def __init__(self, n=1):
