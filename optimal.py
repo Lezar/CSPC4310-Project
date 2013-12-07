@@ -41,7 +41,6 @@ def run_optimal(graph, k = 1):
         for i in range(len(graph)):
             dist_i_to_soln = (graph[i][j] for j in candidate)
             solution.dist_to_soln.append(min(dist_i_to_soln))
-        print "CANDIDATE%s %s with solution %s" %(count, candidate, solution.cost())
         count += 1
         if solution.cost() < optimal_cost:
             optimal_cost = solution.cost()

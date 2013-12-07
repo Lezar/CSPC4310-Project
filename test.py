@@ -246,34 +246,54 @@ class TestGreedy(unittest.TestCase):
 class TestOptimal(unittest.TestCase):
     """Tests the optimal (brute force) k-centre"""
 
-    def setUp(self):
-        self.graph7 =[[0,651,168,449,540,199,209],
-                    [651,0,581,542,322,629,493],
-                    [168,581,0,539,559,60,275],
-                    [449,542,539,0,238,597,264],
-                    [540,322,559,238,0,619,331],
-                    [199,629,60,597,619,0,333],
-                    [209,493,275,264,331,333,0]]
-
-
-        self.solution = optimal.OptimalSolution(self.graph7)
-
     def test_optimal_reset(self):
         """Test if the OptimalSolution can reset itself"""
-        self.solution.reset()
-        self.assertEqual(self.solution.solution_set, [])
-        self.assertEqual(self.solution.dist_to_soln, [])
+        graph6 = [[0,22,40,48,7,85],
+                  [22,0,18,62,24,64],
+                  [40,18,0,73,41,46],
+                  [48,62,73,0,41,103],
+                  [7,24,41,41,0,83],
+                  [85,64,46,103,83,0]]
+        solution = optimal.OptimalSolution(graph6)
+        solution.add_vertex(1)
+        self.assertNotEqual(solution.solution_set, [])
+        self.assertNotEqual(solution.dist_to_soln, [])
+        solution.reset()
+        self.assertEqual(solution.solution_set, [])
+        self.assertEqual(solution.dist_to_soln, [])
 
     def test_run_optimal_solution_n5_k3(self):
         """Test if run_optimal can find the optimal solution for graph5,k=3"""
-        solution_set, cost = optimal.run_optimal(self.graph7, k = 3)
-        print solution_set
-        print cost
+        graph7 =[[0,651,168,449,540,199,209],
+                 [651,0,581,542,322,629,493],
+                 [168,581,0,539,559,60,275],
+                 [449,542,539,0,238,597,264],
+                 [540,322,559,238,0,619,331],
+                 [199,629,60,597,619,0,333],
+                 [209,493,275,264,331,333,0]]
+
+        solution_set, cost = optimal.run_optimal(graph7, k = 3)
         self.assertTrue(1 in solution_set)
         self.assertTrue(2 in solution_set)
         self.assertTrue(3 in solution_set)
         self.assertEquals(len(solution_set),3)
         self.assertEquals(cost, 730)
+
+    def test_run_optimal_solution_n6_k3(self):
+        """Test if run_optimal can find the optimal solution for graph6, k=3"""
+        graph6 = [[0,22,40,48,7,85],
+                  [22,0,18,62,24,64],
+                  [40,18,0,73,41,46],
+                  [48,62,73,0,41,103],
+                  [7,24,41,41,0,83],
+                  [85,64,46,103,83,0]]
+
+        solution_set, cost = optimal.run_optimal(graph6, k = 3)
+        self.assertTrue(1 in solution_set)
+        self.assertTrue(3 in solution_set)
+        self.assertTrue(5 in solution_set)
+        self.assertEquals(len(solution_set),3)
+        self.assertEquals(cost, 64)
 
 if __name__ == '__main__':
     unittest.main()
