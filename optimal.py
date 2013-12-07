@@ -1,4 +1,5 @@
 import greedy
+import graph
 import itertools
 
 class OptimalSolution(greedy.GreedySolution):
@@ -48,3 +49,21 @@ def run_optimal(graph, k = 1):
         solution.reset()
 
     return optimal_solution_set, optimal_cost
+
+if __name__ == '__main__':
+    filename = raw_input('Filename to open: ')
+    filename = './data/' + filename + '.csv'
+
+    graph = graph.Graph()
+    graph.read_from_csv(filename)
+
+    while(True):
+        k = int(raw_input('Please input k: '))
+        if k < len(graph.graph):
+            break
+        print "Graph is size %s. Please adjust your k value." % (len(graph.graph),)
+    
+    solution_set, cost = run_optimal(graph,k)
+
+    print "THE SOLUTION SET IS %s" % (solution_set,)
+    print "THE COST IS %s" % (cost,)
