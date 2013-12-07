@@ -1,6 +1,3 @@
-
-
-
 import unittest
 import graph
 import math
@@ -57,17 +54,12 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(len(metric_graph_4.graph), 4)
         
         # Test triangle inequality
-        for row in metric_graph_4.graph:
-            print row
-
-        print metric_graph_4. points
         for u in range(len(metric_graph_4.graph)):
             for v in range(u, len(metric_graph_4.graph)):
                 for w in range(v, len(metric_graph_4.graph)):
                     dist_uv = metric_graph_4.graph[u][v]
                     dist_vw = metric_graph_4.graph[v][w]
                     dist_wu = metric_graph_4.graph[w][u]
-                    print "%s <= %s + %s" % (dist_uv, dist_vw, dist_wu)
                     self.assertTrue(dist_uv <= dist_vw + dist_wu)
                     self.assertTrue(dist_vw <= dist_wu + dist_uv)
                     self.assertTrue(dist_wu <= dist_uv + dist_vw)
@@ -118,6 +110,50 @@ class TestGraph(unittest.TestCase):
                 graph_dist_uv = graph_23.graph[u][v]
                 point_dist_uv = graph.distance(graph_23.points[u], graph_23.points[v])
                 self.assertEqual(graph_dist_uv, point_dist_uv)
+
+    def test_generate_graph_size_10_is_metric(self):
+        """Test if Graph can construct a metric graph of size 10"""
+        metric_graph_10 = graph.Graph(10)
+        self.assertEqual(len(metric_graph_10.graph), 10)
+        
+        # Test triangle inequality
+        print metric_graph_10. points
+        for u in range(len(metric_graph_10.graph)):
+            for v in range(u, len(metric_graph_10.graph)):
+                for w in range(v, len(metric_graph_10.graph)):
+                    dist_uv = metric_graph_10.graph[u][v]
+                    dist_vw = metric_graph_10.graph[v][w]
+                    dist_wu = metric_graph_10.graph[w][u]
+                    self.assertTrue(dist_uv <= dist_vw + dist_wu)
+                    self.assertTrue(dist_vw <= dist_wu + dist_uv)
+                    self.assertTrue(dist_wu <= dist_uv + dist_vw)
+
+    def test_write_graph(self):
+        """Test if Graph can save to CSV file"""
+        graph_10 = graph.Graph(10)
+        graph_10.write_to_csv("test_write_graph.csv")
+        loaded_graph_10 = graph.Graph()
+        loaded_graph_10.read_from_csv("test_write_graph.csv")
+
+        # First check that size is correct
+        self.assertEqual(len(loaded_graph_10.graph), 10)
+        self.assertEqual(len(loaded_graph_10.graph), 10)
+        self.assertEqual(len(loaded_graph_10.graph[0]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[1]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[2]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[3]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[4]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[5]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[6]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[7]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[8]), 10)
+        self.assertEqual(len(loaded_graph_10.graph[9]), 10)
+
+        # Check that each element is equal
+        for u in range(len(graph_10.graph)):
+            for v in range(u, len(graph_10.graph)):
+                self.assertEqual(loaded_graph_10.graph[u][v], graph_10.graph[u][v])
+                self.assertEqual(loaded_graph_10.graph[v][u], graph_10.graph[v][u])
 
 if __name__ == '__main__':
     unittest.main()
