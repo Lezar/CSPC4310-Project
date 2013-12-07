@@ -1,3 +1,6 @@
+
+
+
 import unittest
 import graph
 import math
@@ -53,13 +56,18 @@ class TestGraph(unittest.TestCase):
         metric_graph_4 = graph.Graph(4)
         self.assertEqual(len(metric_graph_4.graph), 4)
         
-        #Test triangle inequality
+        # Test triangle inequality
+        for row in metric_graph_4.graph:
+            print row
+
+        print metric_graph_4. points
         for u in range(len(metric_graph_4.graph)):
-            for v in range(len(metric_graph_4.graph)):
-                for w in range(len(metric_graph_4.graph)):
+            for v in range(u, len(metric_graph_4.graph)):
+                for w in range(v, len(metric_graph_4.graph)):
                     dist_uv = metric_graph_4.graph[u][v]
                     dist_vw = metric_graph_4.graph[v][w]
                     dist_wu = metric_graph_4.graph[w][u]
+                    print "%s <= %s + %s" % (dist_uv, dist_vw, dist_wu)
                     self.assertTrue(dist_uv <= dist_vw + dist_wu)
                     self.assertTrue(dist_vw <= dist_wu + dist_uv)
                     self.assertTrue(dist_wu <= dist_uv + dist_vw)
@@ -68,7 +76,7 @@ class TestGraph(unittest.TestCase):
         """Test if graphs constructed are symmetric"""
         graph_10 = graph.Graph(11)
         
-        #Test symmetry
+        # Test symmetry
         for u in range(len(graph_10.graph)):
             for v in range(len(graph_10.graph)):
                 self.assertEqual(graph_10.graph[u][v], graph_10.graph[v][u])
@@ -76,19 +84,19 @@ class TestGraph(unittest.TestCase):
     def test_graph_generate_1_point(self):
         """Test if Graph can generate 1 points"""
         graph_1 = graph.Graph(1)
-        graph_1.generate_points(1)
+        graph_1.generate_graph(1)
         self.assertEqual(len(graph_1.points), 1)
 
     def test_graph_generate_11_points(self):
         """Test if Graph can generate 11 points"""
         graph_11 = graph.Graph(11)
-        graph_11.generate_points(11)
+        graph_11.generate_graph(11)
         self.assertEqual(len(graph_11.points), 11)
 
     def test_graph_points_are_not_all_same(self):
         """Test that points generated are not all the same (or else problem is trivial)"""
         graph_20 = graph.Graph(20)
-        graph_20.generate_points(20)
+        graph_20.generate_graph(20)
 
         same = True        
 
@@ -98,6 +106,18 @@ class TestGraph(unittest.TestCase):
                     same = False
 
         self.assertFalse(same)
+
+    def test_graph_is_distances_of_points(self):
+        """Test that the graph is a complete graph were edge weights are distances of points"""
+        graph_23 = graph.Graph(23)
+        graph_23.generate_graph(23)
+
+        # Check distances for every point in points and graph
+        for u in range(len(graph_23.graph)):
+            for v in range(len(graph_23.graph)):
+                graph_dist_uv = graph_23.graph[u][v]
+                point_dist_uv = graph.distance(graph_23.points[u], graph_23.points[v])
+                self.assertEqual(graph_dist_uv, point_dist_uv)
 
 if __name__ == '__main__':
     unittest.main()
