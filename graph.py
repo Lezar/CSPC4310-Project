@@ -41,7 +41,7 @@ class Graph():
             self.graph[i] = [0]*n
 
         random.seed()
-        self.points = [(random.random() *n*n, random.random() *n*n)]        
+        self.points = [(int(random.random()*n*n*n), int(random.random()*n*n*n))]        
         for i in range(1,n):
             print i
             metric = False
@@ -51,7 +51,10 @@ class Graph():
                 metric = True
                 
                 # Use a large range for random to ensure inequalities occur each time
-                point = (random.random() *n*n, random.random() *n*n)
+                # since rounding errors when points are close together may cause the graph
+                # to not have the triangular inequality property. This will cause less
+                # checks for whether the graph is metric
+                point = (int(random.random()*n*n*n), int(random.random()*n*n*n))
                 points_size = len(self.points)
                 
                 # Check if candidate point maintains triangular inequality
@@ -122,4 +125,9 @@ class Graph():
             return
 
 if __name__ == '__main__':
-    graph = Graph(1000)
+    size = raw_input('Size of graph (positive integer):')
+    filename = raw_input('Filename to save to:')
+    filename = filename + '.csv'
+
+    graph = Graph(int(size))
+    graph.write_to_csv(filename)

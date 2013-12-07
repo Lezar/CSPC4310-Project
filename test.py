@@ -1,6 +1,7 @@
 import unittest
 import graph
 import math
+import greedy
 
 class TestGraph(unittest.TestCase):
     """Test whether graph generator creates metric graphs"""
@@ -111,19 +112,19 @@ class TestGraph(unittest.TestCase):
                 point_dist_uv = graph.distance(graph_23.points[u], graph_23.points[v])
                 self.assertEqual(graph_dist_uv, point_dist_uv)
 
-    def test_generate_graph_size_10_is_metric(self):
-        """Test if Graph can construct a metric graph of size 10"""
-        metric_graph_10 = graph.Graph(10)
-        self.assertEqual(len(metric_graph_10.graph), 10)
+    def test_generate_graph_size_30_is_metric(self):
+        """Test if Graph can construct a metric graph of size 20"""
+        metric_graph_30 = graph.Graph(30)
+        self.assertEqual(len(metric_graph_30.graph), 30)
         
         # Test triangle inequality
-        print metric_graph_10. points
-        for u in range(len(metric_graph_10.graph)):
-            for v in range(u, len(metric_graph_10.graph)):
-                for w in range(v, len(metric_graph_10.graph)):
-                    dist_uv = metric_graph_10.graph[u][v]
-                    dist_vw = metric_graph_10.graph[v][w]
-                    dist_wu = metric_graph_10.graph[w][u]
+        print metric_graph_30. points
+        for u in range(len(metric_graph_30.graph)):
+            for v in range(u, len(metric_graph_30.graph)):
+                for w in range(v, len(metric_graph_30.graph)):
+                    dist_uv = metric_graph_30.graph[u][v]
+                    dist_vw = metric_graph_30.graph[v][w]
+                    dist_wu = metric_graph_30.graph[w][u]
                     self.assertTrue(dist_uv <= dist_vw + dist_wu)
                     self.assertTrue(dist_vw <= dist_wu + dist_uv)
                     self.assertTrue(dist_wu <= dist_uv + dist_vw)
@@ -153,7 +154,7 @@ class TestGraph(unittest.TestCase):
         for u in range(len(graph_10.graph)):
             for v in range(u, len(graph_10.graph)):
                 self.assertEqual(loaded_graph_10.graph[u][v], graph_10.graph[u][v])
-                self.assertEqual(loaded_graph_10.graph[v][u], graph_10.graph[v][u])
+                self.assertEqual(loaded_graph_10.graph[v][u], graph_10.graph[v][u])                        
 
 if __name__ == '__main__':
     unittest.main()
