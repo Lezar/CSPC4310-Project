@@ -2,6 +2,7 @@ import unittest
 import graph
 import math
 import greedy
+import optimal
 
 class TestGraph(unittest.TestCase):
     """Test whether graph generator creates metric graphs"""
@@ -159,7 +160,7 @@ class TestGreedy(unittest.TestCase):
     """Tests the greedy k-centre"""
 
     def setUp(self):
-        self.graph10 = graph.Graph(10)
+        self.graph10 = graph.Graph()
         self.graph10.graph =[[0,22,40,48,7,85,59,51,75,31],
                             [22,0,18,62,24,64,50,41,53,48],
                             [40,18,0,73,41,46,44,35,35,62],
@@ -221,6 +222,7 @@ class TestGreedy(unittest.TestCase):
         self.assertTrue(5 in solution_set)
         self.assertTrue(3 in solution_set)
         self.assertTrue(6 in solution_set)
+        self.assertEquals(len(solution_set),4)
         self.assertEquals(cost, 104)
 
     def test_find_greedy_solution_set_k3(self):
@@ -237,8 +239,41 @@ class TestGreedy(unittest.TestCase):
         solution_set, cost = greedy.run_greedy(graph9, k = 3, start_vertex = 7)
         self.assertTrue(7 in solution_set)
         self.assertTrue(1 in solution_set)
-        self.assertTrue(5 in solution_set) 
+        self.assertTrue(5 in solution_set)
+        self.assertEquals(len(solution_set),3)
         self.assertEquals(cost, 917)
+
+class TestOptimal(unittest.TestCase):
+    """Tests the optimal (brute force) k-centre"""
+
+    def setUp(self):
+        self.graph7 =[[0,651,168,449,540,199,209],
+                    [651,0,581,542,322,629,493],
+                    [168,581,0,539,559,60,275],
+                    [449,542,539,0,238,597,264],
+                    [540,322,559,238,0,619,331],
+                    [199,629,60,597,619,0,333],
+                    [209,493,275,264,331,333,0]]
+
+
+        self.solution = optimal.OptimalSolution(self.graph7)
+
+    def test_optimal_reset(self):
+        """Test if the OptimalSolution can reset itself"""
+        self.solution.reset()
+        self.assertEqual(self.solution.solution_set, [])
+        self.assertEqual(self.solution.dist_to_soln, [])
+
+    def test_run_optimal_solution_n5_k3(self):
+        """Test if run_optimal can find the optimal solution for graph5,k=3"""
+        solution_set, cost = optimal.run_optimal(self.graph7, k = 3)
+        print solution_set
+        print cost
+        self.assertTrue(1 in solution_set)
+        self.assertTrue(2 in solution_set)
+        self.assertTrue(3 in solution_set)
+        self.assertEquals(len(solution_set),3)
+        self.assertEquals(cost, 730)
 
 if __name__ == '__main__':
     unittest.main()
