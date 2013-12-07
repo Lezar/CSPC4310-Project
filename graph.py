@@ -87,8 +87,8 @@ class Graph():
         try:
             with open(filename,'w') as writefile:
                 csvwriter = csv.writer(writefile)
-                for row in self.graph:
-                    csvwriter.writerow(row)
+                for i in range(len(self.graph)):
+                    csvwriter.writerow(self.graph[i][:i+1])
         except IOError, e:
             print "I/O error: %s" % e
         
@@ -116,14 +116,21 @@ class Graph():
         try:
             for row in csvreader:
                 self.graph.append([])
-                for element in row:
-                    self.graph[csvreader.line_num-1].append(int(element))
+                for i in range(csvreader.line_num):
+                    self.graph[csvreader.line_num-1].append(int(row[i]))
         except csv.Error, e:
             print "CSV error: %s" % e
             return
         except IndexError, e:
             print "Index error: %s" % e
             return
+        
+        # Make matrix symmetric
+        # While increasing size, we do not have to check for
+        # out of range when getting data from the graph
+        for i in range(len(self.graph)):
+            for j in range(i+1,len(self.graph)):
+                self.graph[i].append(self.graph[j][i])
 
 if __name__ == '__main__':
     size = raw_input('Size of graph (positive integer):')
